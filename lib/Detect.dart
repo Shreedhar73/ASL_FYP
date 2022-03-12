@@ -62,6 +62,7 @@ class _DetectPageState extends State<DetectPage> {
             //   print('yes');
             setState(() {
               label = value.first['label'].toString();
+              percentage = value.first['confidence'].toString();
             });
             //   print(label);
           });
@@ -71,6 +72,7 @@ class _DetectPageState extends State<DetectPage> {
   }
 
   String label = '';
+  String percentage = '';
 
   @override
   void initState() {
@@ -186,6 +188,7 @@ class _DetectPageState extends State<DetectPage> {
                         ),
                       ),
                     ),
+                    Text(percentage),
                   ],
                 ),
               ],
