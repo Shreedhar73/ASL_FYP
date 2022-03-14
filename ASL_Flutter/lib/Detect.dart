@@ -14,14 +14,14 @@ class DetectPage extends StatefulWidget {
 }
 
 class _DetectPageState extends State<DetectPage> {
-  void testModel() async {
-    var recoginitions = await Tflite.runModelOnImage(
-      path: 'assets/model/testA.png',
-      imageMean: 255,
-      asynch: true,
-    );
-    print(recoginitions.toString());
-  }
+  // void testModel() async {
+  //   var recoginitions = await Tflite.runModelOnImage(
+  //     path: 'assets/model/testA.png',
+  //     imageMean: 255,
+  //     asynch: true,
+  //   );
+  //   print(recoginitions.toString());
+  // }
 
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
@@ -59,12 +59,14 @@ class _DetectPageState extends State<DetectPage> {
           ).then((value) {
             value!.map((res) {});
             print(value.first);
-            //   print('yes');
-            setState(() {
-              label = value.first['label'].toString();
-              percentage = value.first['confidence'].toString();
-            });
-            //   print(label);
+            {
+              print('yes');
+              setState(() {
+                label = value.first['label'].toString();
+                percentage = value.first['confidence'].toString();
+              });
+              print(label);
+            }
           });
         },
       );
