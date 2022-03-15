@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
           SignLearnScreen(
             isActive: _selectedIndex == 1,
           ),
-          DetectPage(isActive: false),
+          const DetectPage(),
         ],
       )
           // child: ElevatedButton(

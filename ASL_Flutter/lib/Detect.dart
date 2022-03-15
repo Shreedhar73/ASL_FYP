@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 import 'package:tflite/tflite.dart';
 
 class DetectPage extends StatefulWidget {
-  bool isActive;
-  DetectPage({Key? key, this.isActive = false}) : super(key: key);
+  const DetectPage({Key? key}) : super(key: key);
 
   @override
   State<DetectPage> createState() => _DetectPageState();
@@ -28,8 +27,6 @@ class _DetectPageState extends State<DetectPage> {
   late Future<void> _initializeControllerFuture;
   bool isCameraReady = false;
   String? res;
-  String label = '';
-  double percentage = 0.0;
 
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
@@ -47,6 +44,7 @@ class _DetectPageState extends State<DetectPage> {
         model: "assets/model/converted_model.tflite",
         labels: "assets/model/labels.txt",
       );
+      print('start');
       _controller.startImageStream(
         (image) async {
           Tflite.runModelOnFrame(
@@ -60,17 +58,23 @@ class _DetectPageState extends State<DetectPage> {
             asynch: true,
           ).then((value) {
             value!.map((res) {});
+            print(value.first);
             {
+              print('yes');
               setState(() {
                 label = value.first['label'].toString();
-                percentage = value.first['confidence'] * 100.toStringAsFixed(2);
+                percentage = value.first['confidence'].toString();
               });
+              print(label);
             }
           });
         },
       );
     });
   }
+
+  String label = '';
+  String percentage = '';
 
   @override
   void initState() {
@@ -87,84 +91,111 @@ class _DetectPageState extends State<DetectPage> {
   bool show = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Detection screen'),
-          backgroundColor: Colors.transparent,
-        ),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Flexible(
-                  flex: 5,
-                  child: (isCameraReady)
-                      ? Hero(
-                          tag: 'button',
-                          child: SizedBox(
-                              width: double.infinity,
-                              child: CameraPreview(_controller)),
-                        )
-                      : Container(),
-                ),
-                Flexible(
-                  flex: 2,
-                  child: AnimatedContainer(
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    duration: const Duration(milliseconds: 200),
-                    width: displayWidth(context),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Position ASL signs in a camera to get the English equivalent',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: mainColor,
-                                  fontFamily: 'Comfortaa',
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: displayWidth(context) * 0.04,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              label,
-                              style: TextStyle(
-                                color: mainColor,
-                                fontFamily: 'Comfortaa',
-                                fontWeight: FontWeight.w800,
-                                fontSize: displayWidth(context) * 0.14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: whiteColor,
+      ),
+      child: WillPopScope(
+        onWillPop: () async {
+          await _controller.dispose().then(
+                (context) => Get.back(),
+              );
+          return true;
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: secondaryColor,
+              automaticallyImplyLeading: true,
+              leading: Hero(
+                tag: 'back',
+                child: GestureDetector(
+                  onTap: () {
+                    _controller?.dispose()?.then(
+                          (context) => Get.back(),
+                        );
+                  },
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: mainColor,
                   ),
                 ),
-                const Text("Confidence level"),
-                const Divider(),
-                Text("   ${percentage.toString()}%"),
-              ],
+              ),
             ),
-          ],
-        ));
+            backgroundColor: whiteColor,
+            body: Stack(
+              children: [
+                Column(
+                  children: [
+                    Flexible(
+                      flex: 5,
+                      child: (isCameraReady)
+                          ? Hero(
+                              tag: 'button',
+                              child: Container(
+                                  width: double.infinity,
+                                  child: CameraPreview(_controller)),
+                            )
+                          : Container(),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: AnimatedContainer(
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        duration: Duration(milliseconds: 200),
+                        width: displayWidth(context),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Position ASL signs in the viewfinder above to get the English equivalent below :',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: mainColor,
+                                      fontFamily: 'Comfortaa',
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: displayWidth(context) * 0.04,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  label,
+                                  style: TextStyle(
+                                    color: mainColor,
+                                    fontFamily: 'Comfortaa',
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: displayWidth(context) * 0.14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Text(percentage),
+                  ],
+                ),
+              ],
+            )),
+      ),
+    );
   }
 }
