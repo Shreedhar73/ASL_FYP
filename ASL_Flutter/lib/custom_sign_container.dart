@@ -7,6 +7,8 @@ Widget SignContainer(
     required String image,
     required String value}) {
   return SizedBox(
+    height: displayWidth(context) * 0.5,
+    width: displayWidth(context) * 0.3,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [

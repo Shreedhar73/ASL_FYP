@@ -106,12 +106,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 1.5,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                        ),
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 150, mainAxisExtent: 250),
+                        // gridDelegate:
+                        //     const SliverGridDelegateWithFixedCrossAxisCount(
+                        //   crossAxisCount: 3,
+                        //   childAspectRatio: 1.5,
+                        //   crossAxisSpacing: 5,
+                        //   mainAxisSpacing: 5,
+                        // ),
                       ),
                     ),
                   ),
@@ -130,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     Text(
-                      'A2E',
+                      'Easy ASL',
                       style: TextStyle(
                         fontFamily: 'Comfortaa',
                         fontWeight: FontWeight.w600,
