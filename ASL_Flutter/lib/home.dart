@@ -32,7 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
               panelOpen = false;
             });
           },
-          minHeight: displayHeight(context) * 0.45,
+          minHeight: displayHeight(context) * 0.65,
+          maxHeight: displayHeight(context) * 0.95,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(60),
           ),
@@ -86,19 +87,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: Center(
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
+                      child: GridView.builder(
                         shrinkWrap: true,
                         itemCount: handSignMap.length,
                         physics: (panelOpen)
                             ? const BouncingScrollPhysics()
                             : const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          return SignContainer(
-                              context: context,
-                              image: handSignMap.keys.toList()[index],
-                              value: handSignMap.values.toList()[index]);
+                          return Container(
+                            margin: const EdgeInsets.all(4.0),
+                            child: SizedBox(
+                              height: displayHeight(context) * 0.65,
+                              child: SignContainer(
+                                  context: context,
+                                  image: handSignMap.keys.toList()[index],
+                                  value: handSignMap.values.toList()[index]),
+                            ),
+                          );
                         },
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 1.5,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                        ),
                       ),
                     ),
                   ),

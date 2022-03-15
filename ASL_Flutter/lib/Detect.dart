@@ -28,6 +28,9 @@ class _DetectPageState extends State<DetectPage> {
   bool isCameraReady = false;
   String? res;
 
+  String label = '';
+  double percentage = 0.0;
+
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
     final firstCamera = cameras[0];
@@ -44,7 +47,6 @@ class _DetectPageState extends State<DetectPage> {
         model: "assets/model/converted_model.tflite",
         labels: "assets/model/labels.txt",
       );
-      print('start');
       _controller.startImageStream(
         (image) async {
           Tflite.runModelOnFrame(
@@ -58,23 +60,17 @@ class _DetectPageState extends State<DetectPage> {
             asynch: true,
           ).then((value) {
             value!.map((res) {});
-            print(value.first);
             {
-              print('yes');
               setState(() {
                 label = value.first['label'].toString();
-                percentage = value.first['confidence'].toString();
+                percentage = value.first['confidence'] * 100.toStringAsFixed(2);
               });
-              print(label);
             }
           });
         },
       );
     });
   }
-
-  String label = '';
-  String percentage = '';
 
   @override
   void initState() {
@@ -150,7 +146,7 @@ class _DetectPageState extends State<DetectPage> {
                         width: displayWidth(context),
                         child: Column(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Row(
@@ -169,7 +165,7 @@ class _DetectPageState extends State<DetectPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 40,
                             ),
                             Row(
@@ -190,7 +186,8 @@ class _DetectPageState extends State<DetectPage> {
                         ),
                       ),
                     ),
-                    Text(percentage),
+                    const Text("Confidence level"),
+                    Text("$percentage%"),
                   ],
                 ),
               ],

@@ -7,21 +7,24 @@ Widget SignContainer(
     required String image,
     required String value}) {
   return SizedBox(
-    height: displayWidth(context) * 0.4,
-    width: displayWidth(context) * 0.3,
     child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Image.asset(
-          image,
-          width: displayWidth(context) * 0.2,
+        Expanded(
+          child: Image.asset(
+            image,
+            width: displayWidth(context) * 0.2,
+          ),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontFamily: 'Comfortaa',
-            fontWeight: FontWeight.w600,
-            fontSize: displayWidth(context) * 0.12,
-            color: mainColor,
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontFamily: 'Comfortaa',
+              fontWeight: FontWeight.w600,
+              fontSize: 40,
+              color: mainColor,
+            ),
           ),
         ),
       ],
