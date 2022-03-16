@@ -7,29 +7,23 @@ import 'package:get/get.dart';
 import 'package:tflite/tflite.dart';
 
 class DetectPage extends StatefulWidget {
-  const DetectPage({Key? key}) : super(key: key);
-
   @override
-  State<DetectPage> createState() => _DetectPageState();
+  _DetectPageState createState() => _DetectPageState();
 }
 
 class _DetectPageState extends State<DetectPage> {
-  // void testModel() async {
-  //   var recoginitions = await Tflite.runModelOnImage(
-  //     path: 'assets/model/testA.png',
-  //     imageMean: 255,
-  //     asynch: true,
-  //   );
-  //   print(recoginitions.toString());
-  // }
+  void testModel() async {
+    var recoginitions = await Tflite.runModelOnImage(
+      path: 'assets/model/testA.png',
+      imageMean: 255,
+      asynch: true,
+    );
+    print(recoginitions.toString());
+  }
 
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool isCameraReady = false;
-  String? res;
-
-  String label = '';
-  double percentage = 0.0;
 
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
@@ -43,10 +37,11 @@ class _DetectPageState extends State<DetectPage> {
         isCameraReady = true;
       });
 
-      res = await Tflite.loadModel(
-        model: "assets/model/converted_model.tflite",
+      String? res = await Tflite.loadModel(
+        model: "assets/model/phone_VGG16--92--08-02-23-36.tflite",
         labels: "assets/model/labels.txt",
       );
+      print('start');
       _controller.startImageStream(
         (image) async {
           Tflite.runModelOnFrame(
@@ -60,18 +55,21 @@ class _DetectPageState extends State<DetectPage> {
             asynch: true,
           ).then((value) {
             value!.map((res) {});
-            {
-              setState(() {
-                label = value.first['label'].toString();
-                percentage = value.first['confidence'] * 100.toStringAsFixed(2);
-              });
-            }
+            print(value!.first);
+            //   print('yes');
+            setState(() {
+              label = value.first['label'].toString();
+              percentage = value.first['confidence'].toString();
+            });
+            //   print(label);
           });
         },
       );
     });
   }
 
+  String label = '';
+  String percentage = "";
   @override
   void initState() {
     _initializeCamera();
@@ -80,11 +78,12 @@ class _DetectPageState extends State<DetectPage> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   bool show = false;
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -95,7 +94,7 @@ class _DetectPageState extends State<DetectPage> {
       ),
       child: WillPopScope(
         onWillPop: () async {
-          await _controller.dispose().then(
+          await _controller?.dispose()?.then(
                 (context) => Get.back(),
               );
           return true;
@@ -146,7 +145,7 @@ class _DetectPageState extends State<DetectPage> {
                         width: displayWidth(context),
                         child: Column(
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               height: 20,
                             ),
                             Row(
@@ -165,29 +164,28 @@ class _DetectPageState extends State<DetectPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(
+                            SizedBox(
                               height: 40,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  label,
-                                  style: TextStyle(
-                                    color: mainColor,
-                                    fontFamily: 'Comfortaa',
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: displayWidth(context) * 0.14,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              label,
+                              style: TextStyle(
+                                color: mainColor,
+                                fontFamily: 'Comfortaa',
+                                fontWeight: FontWeight.w800,
+                                fontSize: displayWidth(context) * 0.14,
+                              ),
                             ),
+                            Text(
+                              percentage,
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            )
                           ],
                         ),
                       ),
                     ),
-                    const Text("Confidence level"),
-                    Text("$percentage%"),
                   ],
                 ),
               ],
