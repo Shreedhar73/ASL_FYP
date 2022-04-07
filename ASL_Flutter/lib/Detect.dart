@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tflite/tflite.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class DetectPage extends StatefulWidget {
   @override
@@ -12,6 +13,15 @@ class DetectPage extends StatefulWidget {
 }
 
 class _DetectPageState extends State<DetectPage> {
+  FlutterTts flutterTts = FlutterTts();
+
+    Future speak(String s) async {
+      await flutterTts.setLanguage("en-US");
+      await flutterTts.setPitch(1);
+      await flutterTts.setSpeechRate(0.5);
+      await flutterTts.speak(s);
+    }
+
   void testModel() async {
     var recoginitions = await Tflite.runModelOnImage(
       path: 'assets/model/testA.png',
@@ -145,9 +155,7 @@ class _DetectPageState extends State<DetectPage> {
                         width: displayWidth(context),
                         child: Column(
                           children: [
-                            SizedBox(
-                              height: 20,
-                            ),
+                           
                             Row(
                               children: [
                                 Expanded(
@@ -164,9 +172,7 @@ class _DetectPageState extends State<DetectPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 40,
-                            ),
+                           
                             Text(
                               label,
                               style: TextStyle(
@@ -178,10 +184,14 @@ class _DetectPageState extends State<DetectPage> {
                             ),
                             Text(
                               percentage,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 10,
                               ),
-                            )
+                            ),
+
+                            MaterialButton(onPressed: (){
+                              speak(label);
+                            },child: const Icon(Icons.speaker_outlined,size: 35,),)
                           ],
                         ),
                       ),
