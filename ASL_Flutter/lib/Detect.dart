@@ -48,7 +48,7 @@ class _DetectPageState extends State<DetectPage> {
       });
 
       String? res = await Tflite.loadModel(
-        model: "assets/model/phone_VGG16--92--08-02-23-36.tflite",
+        model: "assets/model/x.tflite",
         labels: "assets/model/labels.txt",
       );
       print('start');

@@ -1,0 +1,132 @@
+<!-- <html>
+    <body>
+        Hello
+        <form action ='/home' method="post">
+            <label for="fname">First name:</label><br>
+            <input type="text"  name="nl" value="Doe"><br><br>
+            <input type="submit" value="Submit">
+          </form>
+
+          <form action = '/trainGen' method = "post">
+             Batch Size :  <input type = "text" name = "n" value = 'Please type integer value'><br><br>
+             <input type = "submit" value="Generate Training Values Value ">
+          </form>
+
+          <form action = '/modelfit' method='post'>
+              Number oF Epchos : <input type = "text" name = "e" value = "1">
+              <input type = "submit" value="Fit to Model">
+          </form>
+    </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+  body{
+    background-color: rgb(161, 244, 216);
+    }
+.container {
+    margin-left: 30px;
+    display:flex;
+    flex-direction: column;
+  
+    }
+
+.vl {
+  border-left: 3px solid orange;
+  height: 40px;
+  margin: 2px;
+  padding: 7px;
+  
+}
+
+.description {
+  display: flex;
+  flex-direction: row;
+}
+.para_container {
+  display:flex;
+  flex-direction: column; 
+}
+.Train_para{
+    display: flex;
+    flex-direction: row;
+    
+}
+.load-data {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.train_prog{
+  display: flex;
+  flex-direction: row;
+}
+.infe_exa{
+  display: flex;
+  flex-direction: row;
+
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="{{url_for('static', filename='A2E_play_banner.png')}}"height=50, width="50"/>
+    <h1>Sign Language Recognition</h1>
+    <p>Web Demonstration of Training a CNN model.</p>
+    <div class="des_container">
+      <div class="description">
+        <div class="vl"></div>
+        <h3>DESCRIPTION</h3>
+      </div>
+     
+      <p>This examples lets you train a American Sign Language Model using  Convolutional Neural Network<br> (also known as a
+      ConvNet or CNN) 
+      </p>
+
+      <p>The Kaggle dataset is used as training data.</p>
+
+        <div class="para_container">
+          <div class="Train_para">
+            <div class="vl"></div>
+            <h3>TRAINING PARAMETERS</h3>
+          </div>
+          <form action ='/read' method="post">
+            <label for="fname"> Lenght of Data :</label>
+            <input type="text"  name="nl" value="1">
+            <input type="submit" value="Submit">
+          </form><br>
+
+          <form action = '/trainGen' method = "post">
+            Batch Size :  <input type = "text" name = "n" value = 'Please type integer value'>
+            <input type = "submit" value="Generate Training Values Value "><br>
+         </form><br><br>
+           
+           
+            
+
+              <form action = '/modelfit' method='post'>
+                Number oF Epchos : <input type = "text" name = "e" value = "1">
+                <input type = "submit" value="Train Model">
+            </form>
+
+            <form action = '/test' method='post'>
+
+              Index of Label : <input type = "text" name = "x" value = "1">
+              <input type = "submit" value="Test Earlier trined Model">
+          </form>
+        </div>
+        <br>
+
+       
+
+
+
+  </div>
+</body>
+</html>

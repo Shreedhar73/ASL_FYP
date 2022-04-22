@@ -1,0 +1,41 @@
+
+<!-- {{result}} -->
+<!-- {{result}} -->
+
+<html>
+    <style>
+        body{
+            background-color: rgb(199, 175, 145);
+            
+        }
+        
+    </style>
+    <body>
+        <h1>This Pages Shows the Accuracy of the Model</h1>
+
+        <button onclick="history.back()">Back</button>
+    </body>
+    
+</html>
+epchos :: {{result[0]}} <br>
+accuracy : {{result[2]}}
+
+
+Test The Developed Model with Test Data Set defined Earlier
+a====>0<br>
+b=====>1<br>
+c=====>2<br>
+.<br>
+.<br>
+.<br>
+.<br>
+z======>25<br>
+<form action = '/predict' method='post'>
+
+    Index of Label : <input type = "text" name = "label" value = "1">
+    <input type = "submit" value="Train Model">
+</form>
+
+
+
+<!-- <img src="/modelfit" id="image" alt="my plot"> -->
