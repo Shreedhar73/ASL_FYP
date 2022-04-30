@@ -35,7 +35,7 @@ class _DetectPageState extends State<DetectPage> {
   }
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -49,9 +49,9 @@ class _DetectPageState extends State<DetectPage> {
     img.Image imageInput = img.decodeImage(_image!.readAsBytesSync())!;
     var pred = _classifier.predict(imageInput);
 
-    if (pred.score < 0.9) {
+    if (pred.score < 0.95) {
       setState(() {
-        this.category = Category("False Object", 0.0);
+        this.category = Category("False Object Detectation", 0.0);
       });
     } else {
       setState(() {
@@ -98,7 +98,16 @@ class _DetectPageState extends State<DetectPage> {
           ),
           Text(
             category != null
-                ? 'Confidence: ${category!.score.toStringAsFixed(3)}'
+                ? 'Confidence level: ${category!.score.toStringAsFixed(3)}'
+                : '',
+            style: TextStyle(fontSize: 16),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            category != null
+                ? 'Confidence percentage: ${(category!.score * 100).toStringAsFixed(2)}%'
                 : '',
             style: TextStyle(fontSize: 16),
           ),
