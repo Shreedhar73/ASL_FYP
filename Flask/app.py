@@ -33,14 +33,17 @@ app = Flask(__name__)
 
 
 
+
+
 TRAINING_FILE = 'datas/sign_mnist_train.csv'
 VALIDATION_FILE = 'datas/sign_mnist_test.csv'
 
 train_data = pd.read_csv(TRAINING_FILE)
+train_data_withLabel = pd.read_csv(TRAINING_FILE)
 train_data.head()
 test_data = pd.read_csv(VALIDATION_FILE)
 test_data.head()
-print("gello")
+
 
 y_train = train_data['label']
 y_test = test_data['label']
@@ -124,12 +127,12 @@ def plot_categories(training_images, training_labels):
 
 def createFig():
     
-    hist = train_data.label.hist(color='pink',bins=10)
+    hist = train_data_withLabel.label.hist(color='pink',bins=10)
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     # xs = range(100)
     # ys = [random.randint(1, 50) for x in xs]
-    axis.hist(train_data.label,bins = 10)
+    axis.hist(train_data_withLabel.label,bins = 10)
     return fig
 
 
@@ -161,18 +164,6 @@ datagen = ImageDataGenerator(
         vertical_flip=False) 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #Create Model
 def create_model():
     model = tf.keras.models.Sequential([
@@ -189,62 +180,8 @@ def create_model():
     optimizer='adam',
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy'])
-   
-  
     return model
-# def build_model():  
-#     model = keras.Sequential([
-#     keras.layers.Conv2D(
-#         #filters=hp.Int('conv_1_filter', min_value=75, max_value=200, step=25),
-#         kernel_size=(3,3),
-#         activation='relu',
-        
-#         input_shape=(28,28,1)
-#     ),
-#     keras.layers.BatchNormalization(),
-#     keras.layers.MaxPool2D(pool_size=(2,2),strides=2,padding='same'),
-#     keras.layers.Conv2D(
-#        # filters=hp.Int('conv_2_filter', min_value=50, max_value=125, step=25),
-#         kernel_size=(3,3),
-#         activation='relu',
-#     ),
-    
-#     keras.layers.Dropout(
-#        # rate = hp.Choice('drop_1_rate', values = [0.1,0.5])
-#     ),
-#     keras.layers.BatchNormalization(),
-#     keras.layers.MaxPool2D(pool_size=(2,2),strides=2,padding='same'),
-    
-    
-#     keras.layers.Conv2D(
-#        # filters=hp.Int('conv_3_filter', min_value=25, max_value=75, step=25),
-#         kernel_size=(3,3),
-#         activation='relu',
-#     ),
-#     keras.layers.BatchNormalization(),
-#     keras.layers.MaxPool2D(pool_size=(2,2),strides=2,padding='same'),  
-#     keras.layers.Flatten(),
-#     keras.layers.Dense(
-#        # units=hp.Int('dense_1_units', min_value=128, max_value=1024, step=32),
-#         activation='relu'
-#     ),
-#     # keras.layers.Dropout(
-#     #     rate = hp.Choice('drop_2_rate', values = [0.1,0.3])
-#     # ),
-#     keras.layers.Dense(24, activation='softmax')
-#   ])
-  
-#     model.compile(optimizer=keras.optimizers.Adam(),
-#               loss='categorical_crossentropy',
-#               metrics=['accuracy'])
-  
-#     return model
 
-# tuner_search=RandomSearch(build_model,
-#                           objective='val_accuracy',
-#                           max_trials=5,directory='output',project_name="ASLdetection1")
-
-# tuner_search.search(train_x,y_train,epochs=2,validation_data = (test_x, y_test))
 
 
 
@@ -254,10 +191,13 @@ lr_reduction = ReduceLROnPlateau(monitor='val_accuracy', patience = 3, verbose=1
 ##APP Routing Starts From Here
 
 @app.route('/')
+def landing():
+    return render_template('landingpage.html')
+
+@app.route('/home')
 def hello_world():
     return render_template('home.html')
-# def p():
-#     print("Hello World")
+
 
 @app.route('/read', methods=["POST"])
 def home():
@@ -267,27 +207,15 @@ def home():
         result = f.readlines()
     return render_template("read.html", result=[result[0],result[int(n)],n])
 
-# @app.route('/parse')
-# def parse():
-    
-#     # training_images, training_labels = parse_data_from_input(TRAINING_FILE)
-#     # validation_images, validation_labels = parse_data_from_input(VALIDATION_FILE)
-#     return render_template("parse.html", result = [training_images.shape,training_labels.shape,validation_images.shape,validation_labels.shape])
 
 
 @app.route('/display')
 # def view():
 def plot_png():
-    # training_images, training_labels = parse_data_from_input(TRAINING_FILE)
     return render_template("display.html",result = "hii")
 
 @app.route('/head')
 def head():
-   
-    outputrow = train_data.head()
-    outputcolumn = train_data.columns
-    count = train_data.label.value_counts
-    
     fig = createFig()
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
@@ -299,23 +227,16 @@ def head():
 
 
 
-# @app.route('/trainGen', methods=["POST"])
-# def trainGen():
-#     batchSize = request.form['n'] 
-#     print(batchSize)
-#     train_generator, validation_generator = train_val_generators(training_images, training_labels, validation_images, validation_labels,int(batchSize))
-    
-    
-#     return render_template("home.html", result=train_generator.x.shape)
-
-
-
 @app.route('/modelfit', methods = ['POST'])
 def modelFit():
     nE = request.form['e']
+    batchSize = request.form['n']
+    print(batchSize)
+    print(nE)
+
     datagen.fit(train_x)
     # Train our model
-    history = model.fit(datagen.flow(train_x,y_train, batch_size = 128) 
+    history = model.fit(datagen.flow(train_x,y_train, batch_size = int(batchSize)) 
                     ,epochs = int(nE)
                     , validation_data = (test_x, y_test)
                     , callbacks = [lr_reduction])
@@ -328,18 +249,8 @@ def modelFit():
     epochs = range(len(acc))
     accuracy = createPlot(epochs,acc,loss)
     output = io.BytesIO()
-    return render_template("modelfit.html",result = [epochs,acc,val_acc[-1],loss,val_loss])
-    # loss = createPlot(epochs,loss)
-    # output1 = io.BytesIO()
-
-    
-   # FigureCanvas(accuracy).print_png(output)
-
-    # FigureCanvas(loss).print_png(output1)
-   # return Response(output.getvalue(),mimetype='image/png'),render_template('modelfit.html',result="1")
-    # return render_template("modelfit.html",result = Response(output.getvalue(),mimetype='image/png'))
-
-   
+    return render_template("modelfit.html",result = [nE,acc[0],val_acc[0],loss[0],val_loss])
+  
 
 
 def createPlot(epchos,accuracy,loss):
@@ -347,8 +258,6 @@ def createPlot(epchos,accuracy,loss):
     hist = train_df.label.hist(color='pink',bins=10)
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
-    # xs = range(100)
-    # ys = [random.randint(1, 50) for x in xs]
     axis.plot(epchos,accuracy,'r',label = 'Training Accuracy')
     axis.plot(epchos,loss,'b',label = 'Loss Accuracy')
     return fig
@@ -386,21 +295,28 @@ def changeToAlphabets(x):
         val="k"
     return val
 
-@app.route('/predict', methods = ['POST'])
-def predict():
-    label = request.form['label']
-    print(label)
-    modelx = tf.keras.models.load_model('ASL_Model.h5')
-    predictions = model.predict(test_x)
-    print(predictions)
-    y_pred_labels = predictions_to_labels(predictions)
-    print(y_pred_labels)
+# @app.route('/predict', methods = ['POST'])
+# def predict():
+#     label = request.form['label']
+#     print(label)
+#     modelx = tf.keras.models.load_model('ASL_Model.h5')
+#     predictions = model.predict(test_x)
+#     for i in range(len(predictions)):
+#         if(predictions[i] >= 9).all():
+#             predictions[i] += 1
+
+#     predictions[:5]
+    
+#     y_pred_labels = predictions_to_labels(predictions)
+#     # print(predictions)
    
 
-    y_test_labels = predictions_to_labels(y_test)
-    print(y_test_labels)
-    x = accuracy_score(y_test_labels,y_pred_labels)
-    return render_template("predict.html",result=[y_pred_labels[int(label)],y_test_labels[int(label)],x])
+#     y_test_labels = predictions_to_labels(y_pred_labels)
+
+
+   
+#     x = accuracy_score(y_test_labels,y_pred_labels)
+#     return render_template("predict.html",result=[y_pred_labels[int(label)],y_test_labels[int(label)],x])
 
 
 @app.route('/test', methods = ['POST'])
@@ -408,12 +324,19 @@ def test():
     imglbl = request.form['x']
     print(imglbl)
     modelx = tf.keras.models.load_model('Accurate.h5')
-    predictions = modelx.predict(test_x)
-    print(predictions)
+    print(modelx)
+    predictions = np.argmax(modelx.predict(test_x), axis=-1)
+    for i in range(len(predictions)):
+        if(predictions[i] >= 9):
+            predictions[i] += 1
+    predictions[:5]  
+    
+   
     y_pred_labels = predictions_to_labels(predictions)
     y_test_labels = predictions_to_labels(y_test)
+   
     x = accuracy_score(y_test_labels,y_pred_labels)
-    return render_template("test.html",result=[y_pred_labels[int(imglbl)],y_test_labels(int[imglbl]),x])
+    return render_template("predict.html",result=[y_pred_labels[int(imglbl)],y_test_labels[int(imglbl)],x])
 
 
 

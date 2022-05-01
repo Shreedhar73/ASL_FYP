@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ASL Trainer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1 {font-family: "Raleway", sans-serif}
+h1{
+  color: black;
+}
+
+body, html {height: 100%}
+.bgimg {
+  background-image: url('/static/landing.jpg');
+  min-height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+
+input{
+padding: 10px;
+color: white;
+background-color: rgb(1, 9, 22);
+border-radius: 25px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+    <img src="{{url_for('static', filename='A2E_play_banner.png')}}"height=50, width="50"/>
+  </div>
+  <div class="w3-display-middle">
+    <h1 class="w3-jumbo w3-animate-top">Web Demonstration of Training a Sign Language CNN Model</h1>
+    <hr class="w3-border-grey" style="margin:auto;width:40%;height: 10px;">
+    <hr> <form action="/home">
+      <input type="submit" value="Go to Training Page">
+    </form>
+  </div>
+ 
+</div>
+
+</body>
+</html>

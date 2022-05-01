@@ -1,23 +1,3 @@
-<!-- <html>
-    <body>
-        Hello
-        <form action ='/home' method="post">
-            <label for="fname">First name:</label><br>
-            <input type="text"  name="nl" value="Doe"><br><br>
-            <input type="submit" value="Submit">
-          </form>
-
-          <form action = '/trainGen' method = "post">
-             Batch Size :  <input type = "text" name = "n" value = 'Please type integer value'><br><br>
-             <input type = "submit" value="Generate Training Values Value ">
-          </form>
-
-          <form action = '/modelfit' method='post'>
-              Number oF Epchos : <input type = "text" name = "e" value = "1">
-              <input type = "submit" value="Fit to Model">
-          </form>
-    </body>
-</html> -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,10 +5,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Home</title>
   <style>
   body{
-    background-color: rgb(161, 244, 216);
+    background-image: url('/static/bg.jpg');
+    color:white;
     }
 .container {
     margin-left: 30px;
@@ -72,13 +53,19 @@
   flex-direction: row;
 
 }
+ .btn{
+  padding: 10px;
+  color: white;
+  background-color: rgb(5, 45, 109);
+  border-radius: 25px;
+}
   </style>
 </head>
 <body>
   <div class="container">
     <img src="{{url_for('static', filename='A2E_play_banner.png')}}"height=50, width="50"/>
     <h1>Sign Language Recognition</h1>
-    <p>Web Demonstration of Training a CNN model.</p>
+    <p>Start Training Your CNN model.</p>
     <div class="des_container">
       <div class="description">
         <div class="vl"></div>
@@ -91,35 +78,47 @@
 
       <p>The Kaggle dataset is used as training data.</p>
 
+      <form action="/head">
+        Distribution of Alphabets in Training File : 
+        <input type="submit" value="show" class="btn">
+      </form>
+
         <div class="para_container">
           <div class="Train_para">
             <div class="vl"></div>
             <h3>TRAINING PARAMETERS</h3>
           </div>
+
           <form action ='/read' method="post">
             <label for="fname"> Lenght of Data :</label>
             <input type="text"  name="nl" value="1">
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="btn">
           </form><br>
 
-          <form action = '/trainGen' method = "post">
+          <!-- <form action = '/trainGen' method = "post">
             Batch Size :  <input type = "text" name = "n" value = 'Please type integer value'>
             <input type = "submit" value="Generate Training Values Value "><br>
-         </form><br><br>
+         </form><br><br> -->
            
            
             
-
+         
               <form action = '/modelfit' method='post'>
-                Number oF Epchos : <input type = "text" name = "e" value = "1">
-                <input type = "submit" value="Train Model">
+                Number oF Epchos : <input type = "text" name = "e" value = "1"> <br> <br>
+                Batch Size :  <input type = "text" name = "n" value = '1'>
+                <input type = "submit" value="Train Model" class="btn">
+             
             </form>
+            <br><br>
+          
 
             <form action = '/test' method='post'>
 
               Index of Label : <input type = "text" name = "x" value = "1">
-              <input type = "submit" value="Test Earlier trined Model">
+              
+              <input type = "submit" value="Test Earlier trined Model" class="btn">
           </form>
+          
         </div>
         <br>
 
@@ -130,3 +129,12 @@
   </div>
 </body>
 </html>
+<script>
+ 
+  function x(){
+    console.log("xxx")
+  const path = document.querySelector("input[type=file]")
+  console.log(path.path)
+  }
+ 
+</script>

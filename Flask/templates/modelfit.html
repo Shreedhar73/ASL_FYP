@@ -2,40 +2,65 @@
 <!-- {{result}} -->
 <!-- {{result}} -->
 
+ <br><br>
 <html>
     <style>
         body{
-            background-color: rgb(199, 175, 145);
-            
+            background-image: url('/static/bg.jpg');
+            color: white;
+            font-size: large;
+            margin-left: 30px;
+        }
+        .btn{
+            padding: 10px;
+            color: white;
+            background-color: rgb(5, 45, 109);
+            border-radius: 25px;
+        }
+
+        button{
+            position: absolute;
+            bottom: 50px;
         }
         
     </style>
     <body>
-        <h1>This Pages Shows the Accuracy of the Model</h1>
+        <div class="intro">
+            <pre> Your Model Has been Successfully Trained.
+    The Model is Saved at Root Directory of the Project as "ASL-Model.h5"
 
-        <button onclick="history.back()">Back</button>
+            </pre>
+
+          
+        </div>
+
+        
     </body>
     
 </html>
-epchos :: {{result[0]}} <br>
-accuracy : {{result[2]}}
 
+epchos :: {{result[0]}}<br><br>
+The Accuracy of the Trained Model is accuracy : {{result[1]}}<br><br>
+Total Loss During Training Process : {{result[3]}}
 
-Test The Developed Model with Test Data Set defined Earlier
-a====>0<br>
-b=====>1<br>
-c=====>2<br>
-.<br>
-.<br>
-.<br>
-.<br>
-z======>25<br>
-<form action = '/predict' method='post'>
-
+<br><br>
+<!-- <form action = '/predict' method='post'>
     Index of Label : <input type = "text" name = "label" value = "1">
-    <input type = "submit" value="Train Model">
+    <input type = "submit" value="Test Model" class="btn">
+
+</form> -->
+
+
+<pre> 
+    The Obtained Model is in .h5 Format.
+ for Flutter use We need to convert the model to .tflite
+ Do you Wish to convert the Model to tflite.
+</pre>
+<form action='/xx' most='post'>
+    <input type="submit" value = "Convert" class="btn"> 
 </form>
 
 
+<button onclick="history.back()">Back</button>
 
-<!-- <img src="/modelfit" id="image" alt="my plot"> -->
+
