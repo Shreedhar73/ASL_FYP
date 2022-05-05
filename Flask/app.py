@@ -221,10 +221,6 @@ def head():
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(),mimetype='image/png')
    
-    
-   
-
-
 
 
 @app.route('/modelfit', methods = ['POST'])
